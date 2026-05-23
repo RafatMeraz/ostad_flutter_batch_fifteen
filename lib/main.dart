@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // Local State
 // Shared/App State
@@ -17,18 +18,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final String appName = 'Flutter Demo';
 
-  int _counter = 0;
-
-  void _increment() {
-    _counter++;
-    setState(() {}); // Why we need setState()
-  }
-
   @override
   Widget build(BuildContext context) {
-    return CounterInheritedWidget(
-      counter: _counter,
-      incrementCounter: _increment,
+    return ChangeNotifierProvider(
+      create: (context) => CounterController(),
       child: MaterialApp(
         title: appName,
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
@@ -38,39 +31,31 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  // State -> Obostha
-
-  void _incrementCounter() {
-    CounterInheritedWidget.of(context).incrementCounter();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final counter = context
-        .dependOnInheritedWidgetOfExactType<CounterInheritedWidget>()!
-        .counter;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: Text(title),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: .center,
           children: [
             const Text('You have pushed the button this many times:'),
-            Text('$counter', style: Theme.of(context).textTheme.headlineMedium),
+            Consumer<CounterController>(
+              builder: (context, counterController, _) {
+                return Text(
+                  '${counterController.counter}',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                );
+              },
+            ),
             FilledButton(
               onPressed: () {
                 Navigator.push(
@@ -84,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: context.read<CounterController>().increment,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
@@ -92,18 +77,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class FirstScreen extends StatefulWidget {
+class FirstScreen extends StatelessWidget {
   const FirstScreen({super.key});
 
   @override
-  State<FirstScreen> createState() => _FirstScreenState();
-}
-
-class _FirstScreenState extends State<FirstScreen> {
-  @override
   Widget build(BuildContext context) {
-    final counter = CounterInheritedWidget.getValue(context);
-
     return Scaffold(
       appBar: AppBar(title: Text('First Screen')),
       body: Center(
@@ -111,7 +89,14 @@ class _FirstScreenState extends State<FirstScreen> {
           mainAxisAlignment: .center,
           children: [
             const Text('You have pushed the button this many times:'),
-            Text('$counter', style: Theme.of(context).textTheme.headlineMedium),
+            Consumer<CounterController>(
+              builder: (context, counterController, _) {
+                return Text(
+                  '${counterController.counter}',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -128,13 +113,11 @@ class LastScreen extends StatefulWidget {
 
 class _LastScreenState extends State<LastScreen> {
   void _incrementCounter() {
-    CounterInheritedWidget.of(context).incrementCounter();
+    context.read<CounterController>().increment();
   }
 
   @override
   Widget build(BuildContext context) {
-    final counter = CounterInheritedWidget.getValue(context);
-
     return Scaffold(
       appBar: AppBar(title: Text('Last Screen')),
       body: Center(
@@ -142,7 +125,14 @@ class _LastScreenState extends State<LastScreen> {
           mainAxisAlignment: .center,
           children: [
             const Text('You have pushed the button this many times:'),
-            Text('$counter', style: Theme.of(context).textTheme.headlineMedium),
+            Consumer<CounterController>(
+              builder: (context, counterController, _) {
+                return Text(
+                  '${counterController.counter}',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -154,32 +144,47 @@ class _LastScreenState extends State<LastScreen> {
     );
   }
 }
+//
+// class CounterInheritedWidget extends InheritedWidget {
+//   final int counter;
+//   final VoidCallback incrementCounter;
+//
+//   const CounterInheritedWidget({
+//     super.key,
+//     required super.child,
+//     required this.counter,
+//     required this.incrementCounter,
+//   });
+//
+//   static int getValue(BuildContext context) {
+//     return context
+//         .dependOnInheritedWidgetOfExactType<CounterInheritedWidget>()!
+//         .counter;
+//   }
+//
+//   static CounterInheritedWidget of(BuildContext context) {
+//     return context
+//         .dependOnInheritedWidgetOfExactType<CounterInheritedWidget>()!;
+//   }
+//
+//   @override
+//   bool updateShouldNotify(CounterInheritedWidget oldState) {
+//     return counter != oldState.counter;
+//   }
+// }//
 
-class CounterInheritedWidget extends InheritedWidget {
-  final int counter;
-  final VoidCallback incrementCounter;
+// 1. Notify Changes
+class CounterController extends ChangeNotifier {
+  int counter = 0;
 
-  const CounterInheritedWidget({
-    super.key,
-    required super.child,
-    required this.counter,
-    required this.incrementCounter,
-  });
-
-  static int getValue(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<CounterInheritedWidget>()!
-        .counter;
+  void increment() {
+    counter++;
+    notifyListeners();
   }
 
-  static CounterInheritedWidget of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<CounterInheritedWidget>()!;
-  }
-
-  @override
-  bool updateShouldNotify(CounterInheritedWidget oldState) {
-    return counter != oldState.counter;
+  void decrement() {
+    counter--;
+    notifyListeners();
   }
 }
 
