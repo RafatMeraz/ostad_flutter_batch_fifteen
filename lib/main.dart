@@ -1,9 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:ostad_flutter_batch_fifteen/todo_list_provider.dart';
-import 'package:ostad_flutter_batch_fifteen/todo_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:ostad_flutter_batch_fifteen/home_screen.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  // Ensure initialization
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const TodoApp());
 }
 
@@ -12,13 +20,8 @@ class TodoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (ctx) => TodoListProvider()),
-      ],
-      child: const MaterialApp(
-        home: TodoScreen(),
-      ),
+    return const MaterialApp(
+      home: HomeScreen(),
     );
   }
 }
