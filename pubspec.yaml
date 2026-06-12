@@ -37,6 +37,7 @@ dependencies:
   provider: ^6.1.5+1
   firebase_core: ^4.10.0
   firebase_auth: ^6.5.2
+  cloud_firestore: ^6.5.0
 
 dev_dependencies:
   flutter_test:
