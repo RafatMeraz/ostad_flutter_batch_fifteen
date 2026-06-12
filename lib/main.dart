@@ -21,22 +21,31 @@ class TodoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, asyncSnapshot) {
-        print(asyncSnapshot.data);
-
-        // TODO: If user already logged in, then move to home screen, otherwise
-        // move to sign in
-
-        return MaterialApp(
-          initialRoute: asyncSnapshot.data != null ? '/home' : '/sign-in', // TODO: Fix this
-          routes: {
-            '/sign-in': (_) => SignInScreen(),
-            '/sign-up': (_) => SignUpScreen(),
-            '/home': (_) => HomeScreen(),
-          },
-        );
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, AsyncSnapshot<User?> snapshot) {
+          // While in progress
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+          // When stream hase data(User object)
+          if (snapshot.hasData) {
+            return const HomeScreen();
+          }
+          // When stream is null
+          return const SignInScreen();
+        },
+      ),
+      routes: {
+        '/sign-in': (_) => const SignInScreen(),
+        '/sign-up': (_) => const SignUpScreen(),
+        '/home': (_) => const HomeScreen(),
       },
     );
   }

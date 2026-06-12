@@ -18,30 +18,30 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign in')),
+      appBar: AppBar(title: const Text('Sign in')),
       body: Padding(
-        padding: .all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           spacing: 8,
           children: [
             TextFormField(
               controller: _emailTEController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 hintText: 'Email',
               ),
             ),
             TextFormField(
               controller: _passwordTEController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
                 hintText: 'Password',
               ),
             ),
-            FilledButton(onPressed: _onTapSignInButton, child: Text('Sign in')),
+            FilledButton(onPressed: _onTapSignInButton, child: const Text('Sign in')),
             TextButton(
               onPressed: _onTapSignUpButton,
-              child: Text('Don\'t have an account? Sign Up'),
+              child: const Text('Don\'t have an account? Sign Up'),
             ),
           ],
         ),
@@ -58,7 +58,9 @@ class _SignInScreenState extends State<SignInScreen> {
       );
       // Navigator.pushNamed(context, '/home');
     } on FirebaseException catch (e) {
-      showSnackBarMessage(context, e.message ?? 'Something went wrong!');
+      if (mounted) {
+        showSnackBarMessage(context, e.message ?? 'Something went wrong!');
+      }
     } on Exception catch (e) {
       debugPrint(e.toString());
     }

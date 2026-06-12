@@ -22,37 +22,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign up')),
+      appBar: AppBar(title: const Text('Sign up')),
       body: Padding(
-        padding: .all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           spacing: 8,
           children: [
             TextFormField(
               controller: _emailTEController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Email',
                 hintText: 'Email',
               ),
             ),
             TextFormField(
               controller: _passwordTEController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
                 hintText: 'Password',
               ),
             ),
             Visibility(
               visible: _singUpInProgress == false,
-              replacement: Center(child: CircularProgressIndicator()),
+              replacement: const Center(child: CircularProgressIndicator()),
               child: FilledButton(
                 onPressed: _onTapSignUpButton,
-                child: Text('Sign up'),
+                child: const Text('Sign up'),
               ),
             ),
             TextButton(
               onPressed: _onTapSignInButton,
-              child: Text('Already have an account? Sign In'),
+              child: const Text('Already have an account? Sign In'),
             ),
           ],
         ),
@@ -75,14 +75,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
         password: _passwordTEController.text,
       );
       _clearTextFields();
-      showSnackBarMessage(context, 'New user created!');
+      if (mounted) {
+        showSnackBarMessage(context, 'New user created!');
+        Navigator.pop(context);
+      }
     } on FirebaseException catch (e) {
       if (e.code == 'email-already-in-use') {
         // TODO: Do whatever you want
       }
       debugPrint(e.stackTrace.toString());
       debugPrint(e.code);
-      showSnackBarMessage(context, e.message ?? 'Something went wrong!');
+      if (mounted) {
+        showSnackBarMessage(context, e.message ?? 'Something went wrong!');
+      }
     } on Exception catch (e) {
       debugPrint(e.toString());
     } finally {
