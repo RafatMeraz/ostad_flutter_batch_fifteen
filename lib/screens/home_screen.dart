@@ -76,16 +76,22 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, index) {
               final FootballMatch match = footballMatchList[index];
 
-              return ListTile(
-                leading: CircleAvatar(
-                  radius: 8,
-                  backgroundColor: match.isRunning ? Colors.green : Colors.grey,
-                ),
-                title: Text('${match.team1Name} vs ${match.team2Name}'),
-                subtitle: Text('Winner Team: ${match.winnerTeam}'),
-                trailing: Text(
-                  '${match.team1Score}-${match.team2Score}',
-                  style: TextStyle(fontSize: 18),
+              return Dismissible(
+                key: Key(match.id),
+                onDismissed: (_) {
+                  _onDismissed(match.id);
+                },
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 8,
+                    backgroundColor: match.isRunning ? Colors.green : Colors.grey,
+                  ),
+                  title: Text('${match.team1Name} vs ${match.team2Name}'),
+                  subtitle: Text('Winner Team: ${match.winnerTeam}'),
+                  trailing: Text(
+                    '${match.team1Score}-${match.team2Score}',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
               );
             },
@@ -93,7 +99,45 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _onTapAddNewMatch,
+        child: Icon(Icons.add),
+      ),
     );
+  }
+
+  void _onTapAddNewMatch() {
+    FootballMatch footballMatch = FootballMatch(
+        id: 'portvsmor',
+        team1Name: 'Brazil',
+        team2Name: 'Morocco',
+        team1Score: 1,
+        team2Score: 1,
+        winnerTeam: 'Brazil',
+        isRunning: false,
+    );
+
+    // ADD
+    // FirebaseFirestore.instance
+    //     .collection('football')
+    //     .doc(footballMatch.id)
+    //     .set(footballMatch.toJson());
+    // FirebaseFirestore.instance
+    //     .collection('football')
+    //     .add(footballMatch.toJson());
+
+    // UPDATE
+    FirebaseFirestore.instance
+        .collection('football')
+        .doc(footballMatch.id)
+        .update(footballMatch.toJson());
+  }
+
+  void _onDismissed(String docId) {
+    FirebaseFirestore.instance
+        .collection('football')
+        .doc(docId)
+        .delete();
   }
 
   void _onTapLogoutButton() {
