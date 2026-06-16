@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:ostad_flutter_batch_fifteen/models/football_match.dart';
 
@@ -39,6 +41,15 @@ class _HomeScreenState extends State<HomeScreen> {
   //   _getFootballMatchesInProgress = false;
   //   setState(() {});
   // }
+
+  @override
+  void initState() {
+    super.initState();
+    // FirebaseCrashlytics.instance.log('Opened home screen');
+    // FirebaseAnalytics.instance.logEvent(name: 'Home screen');
+    FirebaseAnalytics.instance.setUserId(
+        id: FirebaseAuth.instance.currentUser?.uid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onDismissed(String docId) {
+    FirebaseAnalytics.instance.logEvent(name: 'Deleted match!');
     FirebaseFirestore.instance
         .collection('football')
         .doc(docId)
@@ -141,6 +153,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onTapLogoutButton() {
+    FirebaseCrashlytics.instance.log('on tapped log out button');
+    throw Exception("My custom exception");
     FirebaseAuth.instance.signOut();
   }
 }
