@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ostad_flutter_batch_fifteen/analytics_route_observer.dart';
 import 'package:ostad_flutter_batch_fifteen/crashlytics_route_observer.dart';
+import 'package:ostad_flutter_batch_fifteen/fcm_utils.dart';
 import 'package:ostad_flutter_batch_fifteen/screens/home_screen.dart';
 import 'package:ostad_flutter_batch_fifteen/screens/sign_in_screen.dart';
 
@@ -25,6 +26,12 @@ Future<void> main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
+
+  await FcmUtils.initialize();
+
+  print(await FcmUtils.getFcmToken());
+
+  FcmUtils.onRefreshToken();
 
   runApp(const TodoApp());
 }
