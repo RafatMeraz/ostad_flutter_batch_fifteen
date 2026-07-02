@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:label="ostad_flutter_batch_fifteen"
         android:name="${applicationName}"
@@ -29,7 +32,7 @@
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="API_KEY"/>
+            android:value="AIzaSyCY8JlZ5ULZwGOsYdPP-l9VMoPl35K6P2I"/>
 
         <meta-data
             android:name="flutterEmbedding"
