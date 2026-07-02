@@ -40,51 +40,41 @@ class _MyLocationScreenState extends State<MyLocationScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    /// Check if location permission enabled
-    bool isPermissionEnabled = await _isPermissionEnabled();
-    if (isPermissionEnabled) {
-      /// Check if location service enabled
-      bool isLocationServiceEnabled =
-          await Geolocator.isLocationServiceEnabled();
-      if (isLocationServiceEnabled) {
-        /// Get current location
-        Position position = await Geolocator.getCurrentPosition();
-        print(position);
-        if (position.isMocked) {
-          print('This is a mocked location!');
-        }
-        _currentPosition = position;
-        setState(() {});
-      } else {
-        /// If No, then ask to enable location service
-        Geolocator.openLocationSettings();
+    _handleLocationPermission(onSuccess: () async {
+      /// Get current location
+      Position position = await Geolocator.getCurrentPosition();
+      print(position);
+      if (position.isMocked) {
+        print('This is a mocked location!');
       }
-    } else {
-      /// If No, then request permission
-      bool isPermissionEnabled = await _requestPermission();
-      if (isPermissionEnabled) {
-        _getCurrentLocation();
-      } else {
-        // Geolocator.openAppSettings();
-      }
-    }
+      _currentPosition = position;
+      setState(() {});
+    });
   }
 
   Future<void> _listenCurrentLocation() async {
+    _handleLocationPermission(onSuccess: () {
+      /// Get realtime location
+      _locationSubscriber = Geolocator.getPositionStream().listen((
+          Position? newPosition,
+          ) {
+        _currentPosition = newPosition;
+        setState(() {});
+      });
+    });
+  }
+
+  Future<void> _handleLocationPermission(
+      {required VoidCallback onSuccess}) async {
     /// Check if location permission enabled
     bool isPermissionEnabled = await _isPermissionEnabled();
     if (isPermissionEnabled) {
       /// Check if location service enabled
       bool isLocationServiceEnabled =
-          await Geolocator.isLocationServiceEnabled();
+      await Geolocator.isLocationServiceEnabled();
       if (isLocationServiceEnabled) {
-        /// Get realtime location
-        _locationSubscriber = Geolocator.getPositionStream().listen((
-          Position? newPosition,
-        ) {
-          _currentPosition = newPosition;
-          setState(() {});
-        });
+        // Action
+        onSuccess();
       } else {
         /// If No, then ask to enable location service
         Geolocator.openLocationSettings();
