@@ -15,6 +15,7 @@ dependencies:
   firebase_core: ^4.11.0
   firebase_crashlytics: ^5.2.4
   firebase_analytics: ^12.4.3
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -24,7 +25,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/
