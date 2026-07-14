@@ -1,6 +1,7 @@
 import 'package:crafty_bay/app/extensions/localization_extension.dart';
-import 'package:crafty_bay/l10n/app_localizations.dart';
+import 'package:crafty_bay/app/providers/locale_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/app_logo.dart';
 
@@ -26,6 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Spacer(),
               AppLogo(),
+              LocaleChangerDropdown(),
               Spacer(),
               CircularProgressIndicator(),
               const SizedBox(height: 16),
@@ -34,6 +36,32 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class LocaleChangerDropdown extends StatelessWidget {
+  const LocaleChangerDropdown({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<LocaleProvider>(
+      builder: (context, localeProvider, _) {
+        return DropdownButton<Locale>(
+          value: localeProvider.currentLocale,
+          items: localeProvider.supportedLocales.map((e) {
+            return DropdownMenuItem(
+              value: e,
+              child: Text(e.languageCode.toUpperCase()),
+            );
+          }).toList(),
+          onChanged: (Locale? newLocale) {
+            if (newLocale != null) {
+              localeProvider.changeLocale(newLocale);
+            }
+          },
+        );
+      },
     );
   }
 }
