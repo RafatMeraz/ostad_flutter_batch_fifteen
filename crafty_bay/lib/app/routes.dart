@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../features/auth/presentation/screens/sign_in_screen.dart';
 import '../features/auth/presentation/screens/sign_up_screen.dart';
 import '../features/auth/presentation/screens/splash_screen.dart';
 import '../features/auth/presentation/screens/verify_otp_screen.dart';
@@ -15,6 +16,8 @@ class AppRoutes {
         widget = SignUpScreen();
       case VerifyOtpScreen.name:
         widget = VerifyOtpScreen();
+      case SignInScreen.name:
+        widget = SignInScreen();
     }
 
     return MaterialPageRoute(builder: (_) => widget);
