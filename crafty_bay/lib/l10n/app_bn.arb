@@ -1,4 +1,6 @@
 {
     "version" : "ভার্সন",
-    "signUpSubTitle": "Create an account with details BN"
+    "signUpSubTitle": "Create an account with details BN",
+    "alreadyHaveAnAccount": "Already have an account? BN",
+    "signIn": "Sign In BN"
 }

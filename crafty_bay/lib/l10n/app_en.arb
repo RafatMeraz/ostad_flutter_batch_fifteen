@@ -1,4 +1,6 @@
 {
     "version" : "Version",
-    "signUpSubTitle": "Create an account with details"
+    "signUpSubTitle": "Create an account with details",
+    "alreadyHaveAnAccount": "Already have an account?",
+    "signIn": "Sign In"
 }

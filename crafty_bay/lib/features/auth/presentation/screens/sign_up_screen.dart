@@ -1,9 +1,9 @@
-import 'package:crafty_bay/app/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/extensions/utility_extension.dart';
 import '../../../../app/validators.dart';
 import '../widgets/app_logo.dart';
+import 'verify_otp_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -104,6 +104,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPressed: _onTapSignUpButton,
                     child: Text('Sign Up'),
                   ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: .center,
+                    children: [
+                      Text(
+                        context.localizations.alreadyHaveAnAccount,
+                        style: context.textTheme.labelLarge,
+                      ),
+                      TextButton(
+                        onPressed: _onTapSignInButton,
+                        child: Text(context.localizations.signIn),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -113,5 +127,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  void _onTapSignUpButton() {}
+  void _onTapSignInButton() {}
+
+  void _onTapSignUpButton() {
+    Navigator.pushNamed(context, VerifyOtpScreen.name);
+  }
+
+  @override
+  void dispose() {
+    _emailTEController.dispose();
+    _firstNameTEController.dispose();
+    _lastNameTEController.dispose();
+    _mobileTEController.dispose();
+    _cityTEController.dispose();
+    _passwordTEController.dispose();
+    super.dispose();
+  }
 }
