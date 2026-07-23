@@ -7,6 +7,9 @@ class AppTheme {
     brightness: Brightness.light,
     colorSchemeSeed: AppColors.themeColor,
     scaffoldBackgroundColor: Colors.white,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.white,
+    ),
     progressIndicatorTheme: _progressIndicatorThemeData,
     textTheme: _textTheme,
     inputDecorationTheme: _inputDecorationTheme,
