@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/extensions/utility_extension.dart';
 import '../../../../app/validators.dart';
+import '../../../shared/presentation/screens/main_nav_holder_screen.dart';
 import '../widgets/app_logo.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -84,7 +85,10 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void _onTapSignInButton() {}
+  void _onTapSignInButton() {
+    Navigator.pushNamedAndRemoveUntil(
+        context, MainNavHolderScreen.name, (_) => false);
+  }
 
   void _onTapSignUpButton() {
     Navigator.pop(context);
