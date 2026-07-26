@@ -1,6 +1,7 @@
-import 'package:crafty_bay/app/extensions/utility_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../shared/presentation/providers/main_nav_holder_provider.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/home_carousel_slider.dart';
 import '../widgets/home_category_section.dart';
@@ -30,13 +31,14 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 12),
             HomeSectionHeader(
               title: 'Category',
-              onTapSeeAll: () {},
+              onTapSeeAll: () {
+                context.read<MainNavHolderProvider>().moveToCategory();
+              },
             ),
-            HomeCategorySection()
+            HomeCategorySection(),
           ],
         ),
       ),
     );
   }
 }
-
