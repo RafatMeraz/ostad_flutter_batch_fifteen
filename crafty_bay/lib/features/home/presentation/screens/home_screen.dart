@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/home_app_bar.dart';
 import '../widgets/home_carousel_slider.dart';
+import '../widgets/home_category_section.dart';
 import '../widgets/home_search_bar.dart';
 import '../widgets/home_section_header.dart';
 
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: 'Category',
               onTapSeeAll: () {},
             ),
-
+            HomeCategorySection()
           ],
         ),
       ),
