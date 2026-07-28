@@ -10,7 +10,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 180,
+      width: 140,
       child: Card(
         color: Colors.white,
         shadowColor: AppColors.themeColor.withAlpha(30),
@@ -19,7 +19,7 @@ class ProductItem extends StatelessWidget {
           crossAxisAlignment: .start,
           children: [
             Container(
-              width: 180,
+              width: 140,
               decoration: BoxDecoration(
                 color: AppColors.themeColor.withAlpha(20),
                 borderRadius: .only(
@@ -73,7 +73,7 @@ class ProductItem extends StatelessWidget {
                         ),
                         color: AppColors.themeColor,
                         child: Padding(
-                          padding: const EdgeInsets.all(4.0),
+                          padding: const EdgeInsets.all(2.0),
                           child: Icon(
                             Icons.favorite_border,
                             size: 16,
