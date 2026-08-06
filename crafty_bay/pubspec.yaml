@@ -24,6 +24,8 @@ dependencies:
   email_validator: ^3.0.0
   pin_code_fields: ^9.4.0
   carousel_slider: ^5.1.2
+  http: ^1.6.0
+  logger: ^2.7.0
 
 dev_dependencies:
   flutter_test:
