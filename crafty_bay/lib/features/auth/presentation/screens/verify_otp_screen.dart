@@ -1,17 +1,24 @@
 import 'package:crafty_bay/app/app_colors.dart';
+import 'package:crafty_bay/features/auth/data/models/verify_otp_params.dart';
 import 'package:crafty_bay/features/auth/presentation/providers/resend_otp_provider.dart';
 import 'package:crafty_bay/features/auth/presentation/widgets/resend_otp_section.dart';
+import 'package:crafty_bay/features/shared/presentation/screens/main_nav_holder_screen.dart';
+import 'package:crafty_bay/features/shared/presentation/widgets/snack_bar_message.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/extensions/utility_extension.dart';
+import '../../../shared/presentation/widgets/centered_progress_indicator.dart';
+import '../providers/verify_otp_provider.dart';
 import '../widgets/app_logo.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
-  const VerifyOtpScreen({super.key});
+  const VerifyOtpScreen({super.key, required this.email});
 
   static const String name = '/verify-otp';
+
+  final String email;
 
   @override
   State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
@@ -24,6 +31,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
 
   final ResendOtpProvider _resendOtpProvider = ResendOtpProvider();
 
+  final VerifyOtpProvider _verifyOtpProvider = VerifyOtpProvider();
+
   @override
   void initState() {
     super.initState();
@@ -32,8 +41,11 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: _resendOtpProvider,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: _resendOtpProvider),
+        ChangeNotifierProvider.value(value: _verifyOtpProvider),
+      ],
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
@@ -69,12 +81,20 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    FilledButton(
-                      onPressed: _onTapVerifyButton,
-                      child: Text('Verify'),
+                    Consumer<VerifyOtpProvider>(
+                      builder: (context, _, _) {
+                        if (_verifyOtpProvider.verifyOtpInProgress) {
+                          return CenteredProgressIndicator();
+                        }
+
+                        return FilledButton(
+                          onPressed: _onTapVerifyButton,
+                          child: Text('Verify'),
+                        );
+                      },
                     ),
                     const SizedBox(height: 16),
-                    ResendOtpSection()
+                    ResendOtpSection(),
                   ],
                 ),
               ),
@@ -85,8 +105,28 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     );
   }
 
+  void _onTapVerifyButton() {
+    if (_otpTEController.text.length == 4) {
+      _verifyOtp();
+    }
+  }
 
-  void _onTapVerifyButton() {}
+  Future<void> _verifyOtp() async {
+    VerifyOtpParams params = VerifyOtpParams(
+      email: widget.email,
+      otp: _otpTEController.text,
+    );
+    bool isSuccess = await _verifyOtpProvider.verifyOtp(params);
+    if (isSuccess) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        MainNavHolderScreen.name,
+        (_) => false,
+      );
+    } else {
+      showSnackBarMessage(context, _verifyOtpProvider.errorMessage!);
+    }
+  }
 
   @override
   void dispose() {
@@ -94,4 +134,3 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     super.dispose();
   }
 }
-
