@@ -1,7 +1,7 @@
 import 'package:crafty_bay/app/providers/auth_controller.dart';
 import 'package:crafty_bay/app/providers/locale_provider.dart';
 import 'package:crafty_bay/app/providers/theme_provider.dart';
-import 'package:crafty_bay/features/auth/presentation/screens/sign_up_screen.dart';
+import 'package:crafty_bay/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
           context, MainNavHolderScreen.name, (predicate) => false);
     } else {
       Navigator.pushNamedAndRemoveUntil(
-          context, SignUpScreen.name, (predicate) => false);
+          context, SignInScreen.name, (predicate) => false);
     }
   }
 

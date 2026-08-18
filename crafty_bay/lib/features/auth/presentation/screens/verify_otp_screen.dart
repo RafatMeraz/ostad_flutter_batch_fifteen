@@ -117,6 +117,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
       otp: _otpTEController.text,
     );
     bool isSuccess = await _verifyOtpProvider.verifyOtp(params);
+
+    if (!mounted) return;
+
     if (isSuccess) {
       Navigator.pushNamedAndRemoveUntil(
         context,

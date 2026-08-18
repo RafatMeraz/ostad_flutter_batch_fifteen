@@ -73,7 +73,7 @@ class NetworkCaller {
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
-          body: decodedJson['msg'],
+          errorMessage: decodedJson['msg'],
         );
       }
     } catch (e) {

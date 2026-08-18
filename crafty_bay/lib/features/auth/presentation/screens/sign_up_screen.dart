@@ -148,7 +148,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _onTapSignInButton() {
-    Navigator.pushNamed(context, SignInScreen.name);
+    Navigator.pop(context);
   }
 
   Future<void> _signUp() async {
