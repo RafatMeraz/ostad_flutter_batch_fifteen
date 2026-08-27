@@ -1,10 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:crafty_bay/features/shared/presentation/widgets/no_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../app/app_colors.dart';
 
 class ProductImageCarousel extends StatefulWidget {
-  const ProductImageCarousel({super.key});
+  const ProductImageCarousel({super.key, required this.images});
+
+  final List<String> images;
 
   @override
   State<ProductImageCarousel> createState() => _ProductImageCarouselState();
@@ -27,14 +31,18 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
             autoPlay: false,
             autoPlayInterval: Duration(seconds: 1),
           ),
-          items: [1, 2, 3, 4, 5].map((i) {
+          items: widget.images.map((image) {
             return Builder(
               builder: (BuildContext context) {
                 return Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(color: Colors.grey.withAlpha(50)),
                   alignment: .center,
-                  child: Text('text $i', style: TextStyle(fontSize: 16.0)),
+                  child: CachedNetworkImage(
+                    imageUrl: image,
+                    errorWidget: (_, _, _) => NoImage(),
+                    fit: .scaleDown,
+                  ),
                 );
               },
             );
@@ -51,7 +59,7 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
               return Row(
                 mainAxisAlignment: .center,
                 children: [
-                  for (int i = 0; i < 5; i++)
+                  for (int i = 0; i < widget.images.length; i++)
                     Container(
                       width: 10,
                       height: 10,

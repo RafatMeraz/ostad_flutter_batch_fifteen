@@ -26,7 +26,8 @@ class AppRoutes {
       case MainNavHolderScreen.name:
           widget = MainNavHolderScreen();
       case ProductDetailsScreen.name:
-          widget = ProductDetailsScreen();
+          final String productId = settings.arguments as String;
+          widget = ProductDetailsScreen(productId: productId);
       case ProductsByCategoryScreen.name:
         final category = settings.arguments as CategoryModel;
         widget = ProductsByCategoryScreen(category: category);

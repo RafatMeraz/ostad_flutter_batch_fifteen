@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../../app/app_colors.dart';
 import '../../../../../app/constants.dart';
+import '../../providers/product_details_provider.dart';
 
 class PriceAndAddToCartSection extends StatelessWidget {
   const PriceAndAddToCartSection({super.key});
@@ -21,13 +23,17 @@ class PriceAndAddToCartSection extends StatelessWidget {
             crossAxisAlignment: .start,
             children: [
               Text('Price', style: TextStyle(fontWeight: .w600)),
-              Text(
-                '${Constants.takaSign}100',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: .w600,
-                  color: AppColors.themeColor,
-                ),
+              Consumer<ProductDetailsProvider>(
+                builder: (context, productDetailsProvider, _) {
+                  return Text(
+                    '${Constants.takaSign}${productDetailsProvider.productDetails!.currentPrice}',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: .w600,
+                      color: AppColors.themeColor,
+                    ),
+                  );
+                },
               ),
             ],
           ),
