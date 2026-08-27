@@ -18,7 +18,7 @@ class CategoryItem extends StatelessWidget {
         Navigator.pushNamed(
           context,
           ProductsByCategoryScreen.name,
-          arguments: category.title,
+          arguments: category,
         );
       },
       child: Column(

@@ -15,7 +15,7 @@ class HomeProductsSection extends StatelessWidget {
         itemCount: 10,
         scrollDirection: .horizontal,
         itemBuilder: (context, index) {
-          return ProductItem();
+          // return ProductItem();
         },
       ),
     );

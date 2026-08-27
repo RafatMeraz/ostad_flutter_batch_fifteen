@@ -1,12 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_colors.dart';
-import '../../../../app/asset_paths.dart';
 import '../../../../app/constants.dart';
+import '../../../products/models/product_model.dart';
 import '../../../products/presentation/screens/product_details_screen.dart';
+import 'no_image.dart';
 
 class ProductItem extends StatelessWidget {
-  const ProductItem({super.key});
+  const ProductItem({super.key, required this.productModel});
+
+  final ProductModel productModel;
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +38,12 @@ class ProductItem extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const .all(8),
-                  child: Image.asset(
-                    AssetPaths.dummyImagePng,
+                  child: CachedNetworkImage(
+                    width: 140,
+                    imageUrl: _getPhotoPath(productModel.photos),
                     fit: BoxFit.scaleDown,
+                    errorWidget: (_, _, _) => NoImage(),
+                    progressIndicatorBuilder: (_, _, _) => NoImage(),
                   ),
                 ),
               ),
@@ -46,7 +53,7 @@ class ProductItem extends StatelessWidget {
                   crossAxisAlignment: .start,
                   children: [
                     Text(
-                      'Title of productwek rlewrjlk',
+                      productModel.title,
                       maxLines: 1,
                       style: TextStyle(
                         fontSize: 16,
@@ -59,7 +66,7 @@ class ProductItem extends StatelessWidget {
                       mainAxisAlignment: .spaceBetween,
                       children: [
                         Text(
-                          '${Constants.takaSign}100',
+                          '${Constants.takaSign}${productModel.currentPrice}',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: .w500,
@@ -69,7 +76,7 @@ class ProductItem extends StatelessWidget {
                         Wrap(
                           children: [
                             Icon(Icons.star, size: 20, color: Colors.amber),
-                            Text('4.5'),
+                            Text('${productModel.rating}'),
                           ],
                         ),
                         Card(
@@ -96,5 +103,9 @@ class ProductItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getPhotoPath(List<String> photos) {
+    return photos.length > 0 ? photos.first : '';
   }
 }

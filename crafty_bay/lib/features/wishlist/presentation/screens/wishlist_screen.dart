@@ -25,7 +25,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
         ),
         itemBuilder: (context, index) {
           // TODO: Fix the UI with Aspect Ratio
-          return FittedBox(child: ProductItem());
+          // return FittedBox(child: ProductItem());
         },
       ),
     );
