@@ -1,3 +1,4 @@
+import 'package:crafty_bay/features/category/presentation/providers/category_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,11 +28,13 @@ class _MainNavHolderScreenState extends State<MainNavHolderScreen> {
   ];
 
   final HomeSlidersProvider _homeSlidersProvider = HomeSlidersProvider();
+  final CategoryListProvider _categoryListProvider = CategoryListProvider();
 
   @override
   void initState() {
     super.initState();
     _homeSlidersProvider.getHomeSliders();
+    _categoryListProvider.getCategoryList();
   }
 
   @override
@@ -39,6 +42,7 @@ class _MainNavHolderScreenState extends State<MainNavHolderScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: _homeSlidersProvider),
+        ChangeNotifierProvider.value(value: _categoryListProvider),
       ],
       child: Consumer<MainNavHolderProvider>(
         builder: (context, mainNavHolderProvider, _) {

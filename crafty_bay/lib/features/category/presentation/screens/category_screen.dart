@@ -14,12 +14,13 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  final CategoryListProvider _categoryListProvider = CategoryListProvider();
+  late final CategoryListProvider _categoryListProvider;
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    _categoryListProvider = context.read<CategoryListProvider>();
     _categoryListProvider.getCategoryList();
     _scrollController.addListener(_loadMore);
   }
@@ -36,50 +37,47 @@ class _CategoryScreenState extends State<CategoryScreen> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (_, _) => _backToHome(),
-      child: ChangeNotifierProvider.value(
-        value: _categoryListProvider,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('Category'),
-            leading: IconButton(
-              onPressed: () => _backToHome(),
-              icon: Icon(Icons.arrow_back_ios),
-            ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Category'),
+          leading: IconButton(
+            onPressed: () => _backToHome(),
+            icon: Icon(Icons.arrow_back_ios),
           ),
-          body: Consumer<CategoryListProvider>(
-            builder: (context, categoryListProvider, _) {
-              if (categoryListProvider.initialLoading) {
-                return CenteredProgressIndicator();
-              }
+        ),
+        body: Consumer<CategoryListProvider>(
+          builder: (context, categoryListProvider, _) {
+            if (categoryListProvider.initialLoading) {
+              return CenteredProgressIndicator();
+            }
 
-              return Column(
-                children: [
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: () async {
-                        categoryListProvider.refreshCategoryList();
-                      },
-                      child: GridView.builder(
-                        controller: _scrollController,
-                        itemCount: categoryListProvider.categories.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 12,
-                        ),
-                        itemBuilder: (context, index) {
-                          return FittedBox(child: CategoryItem(
-                            category: categoryListProvider.categories[index],
-                          ));
-                        },
+            return Column(
+              children: [
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      categoryListProvider.refreshCategoryList();
+                    },
+                    child: GridView.builder(
+                      controller: _scrollController,
+                      itemCount: categoryListProvider.categories.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        mainAxisSpacing: 12,
                       ),
+                      itemBuilder: (context, index) {
+                        return FittedBox(child: CategoryItem(
+                          category: categoryListProvider.categories[index],
+                        ));
+                      },
                     ),
                   ),
-                  if (categoryListProvider.isLoadingMore)
-                    LinearProgressIndicator(),
-                ],
-              );
-            },
-          ),
+                ),
+                if (categoryListProvider.isLoadingMore)
+                  LinearProgressIndicator(),
+              ],
+            );
+          },
         ),
       ),
     );
