@@ -1,3 +1,4 @@
+import 'package:crafty_bay/app/crafty_bay_app.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

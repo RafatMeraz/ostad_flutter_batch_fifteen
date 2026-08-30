@@ -1,3 +1,5 @@
+import 'package:crafty_bay/app/providers/auth_controller.dart';
+import 'package:crafty_bay/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:crafty_bay/features/category/presentation/providers/category_list_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +52,16 @@ class _MainNavHolderScreenState extends State<MainNavHolderScreen> {
             body: _screens[mainNavHolderProvider.selectedIndex],
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: mainNavHolderProvider.selectedIndex,
-              onTap: mainNavHolderProvider.changeIndex,
+              onTap: (index) async {
+                if (index == 2 || index == 3) {
+                 if (await AuthController.isLoggedIn() == false) {
+                   Navigator.pushNamed(context, SignInScreen.name);
+                   return;
+                 }
+                }
+
+                mainNavHolderProvider.changeIndex(index);
+              },
               selectedItemColor: AppColors.themeColor,
               unselectedItemColor: Colors.grey,
               showUnselectedLabels: true,
