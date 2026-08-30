@@ -1,14 +1,17 @@
+import 'package:crafty_bay/app/providers/auth_controller.dart';
+import 'package:crafty_bay/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:crafty_bay/features/cart/data/models/add_to_cart_params.dart';
+import 'package:crafty_bay/features/cart/presentation/providers/add_to_cart_provider.dart';
 import 'package:crafty_bay/features/products/presentation/providers/product_details_provider.dart';
-import 'package:crafty_bay/features/products/presentation/providers/product_list_provider.dart';
 import 'package:crafty_bay/features/products/presentation/widgets/product_details/color_picker.dart';
 import 'package:crafty_bay/features/products/presentation/widgets/product_details/size_picker.dart';
 import 'package:crafty_bay/features/shared/presentation/widgets/centered_progress_indicator.dart';
 import 'package:crafty_bay/features/shared/presentation/widgets/inc_dec_button.dart';
+import 'package:crafty_bay/features/shared/presentation/widgets/snack_bar_message.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../app/app_colors.dart';
-import '../../../../app/constants.dart';
 import '../widgets/product_details/price_and_add_to_cart_section.dart';
 import '../widgets/product_details/product_image_carousel.dart';
 
@@ -26,6 +29,11 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final ProductDetailsProvider _productDetailsProvider =
       ProductDetailsProvider();
+  final AddToCartProvider _addToCartProvider = AddToCartProvider();
+
+  String? _selectedColor;
+  String? _selectedSize;
+  int _quantity = 1;
 
   @override
   void initState() {
@@ -33,10 +41,39 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     _productDetailsProvider.getProductDetails(widget.productId);
   }
 
+  void _addToCart() async {
+    if (await AuthController.isLoggedIn() == false) {
+      Navigator.pushNamed(context, SignInScreen.name);
+      return;
+    }
+
+    final bool result = await _addToCartProvider.addToCart(
+      AddToCartParams(
+        productId: widget.productId,
+        color: _selectedColor ?? '',
+        size: _selectedSize ?? '',
+        quantity: _quantity,
+      ),
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    if (result) {
+      showSnackBarMessage(context, 'Added to cart');
+    } else {
+      showSnackBarMessage(context, _addToCartProvider.errorMessage!);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: _productDetailsProvider,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: _productDetailsProvider),
+        ChangeNotifierProvider.value(value: _addToCartProvider),
+      ],
       child: Scaffold(
         appBar: AppBar(title: Text('Product Details')),
         body: Consumer<ProductDetailsProvider>(
@@ -54,22 +91,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        ProductImageCarousel(
-                          images: productDetails.photos,
-                        ),
+                        ProductImageCarousel(images: productDetails.photos),
                         Padding(
-                          padding: const .all(16),
+                          padding: const EdgeInsets.all(16),
                           child: Column(
-                            crossAxisAlignment: .start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
                                   Expanded(
                                     child: Text(
                                       productDetails.title,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 18,
-                                        fontWeight: .w600,
+                                        fontWeight: FontWeight.w600,
                                         color: Colors.black54,
                                       ),
                                     ),
@@ -78,7 +113,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     width: 80,
                                     child: IncDecButton(
                                       initialValue: 1,
-                                      onChange: (int value) {},
+                                      onChange: (int value) {
+                                        _quantity = value;
+                                      },
                                       maxValue: productDetails.quantity,
                                       minValue: 1,
                                     ),
@@ -106,11 +143,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   SizedBox(width: 8),
                                   Card(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: .circular(4),
+                                      borderRadius: BorderRadius.circular(4),
                                     ),
                                     color: AppColors.themeColor,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(2.0),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(2.0),
                                       child: Icon(
                                         Icons.favorite_border,
                                         size: 16,
@@ -120,49 +157,51 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 16),
-                              Text(
+                              const SizedBox(height: 16),
+                              const Text(
                                 'Color',
                                 style: TextStyle(
-                                  fontWeight: .w600,
+                                  fontWeight: FontWeight.w600,
                                   color: Colors.black54,
                                   fontSize: 16,
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               ColorPicker(
                                 colors: productDetails.colors,
-                                onChange: (String selectedColor) {},
+                                onChange: (String selectedColor) {
+                                  _selectedColor = selectedColor;
+                                },
                               ),
-                              SizedBox(height: 16),
-                              Text(
+                              const SizedBox(height: 16),
+                              const Text(
                                 'Size',
                                 style: TextStyle(
-                                  fontWeight: .w600,
+                                  fontWeight: FontWeight.w600,
                                   color: Colors.black54,
                                   fontSize: 16,
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               SizePicker(
                                 sizes: productDetails.sizes,
                                 onChange: (String selectedSize) {
-                                  debugPrint(selectedSize);
+                                  _selectedSize = selectedSize;
                                 },
                               ),
-                              SizedBox(height: 16),
-                              Text(
+                              const SizedBox(height: 16),
+                              const Text(
                                 'Description',
                                 style: TextStyle(
-                                  fontWeight: .w600,
+                                  fontWeight: FontWeight.w600,
                                   color: Colors.black54,
                                   fontSize: 16,
                                 ),
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               Text(
                                 productDetails.description,
-                                style: TextStyle(color: Colors.black54),
+                                style: const TextStyle(color: Colors.black54),
                               ),
                             ],
                           ),
@@ -171,7 +210,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ),
                   ),
                 ),
-                PriceAndAddToCartSection(),
+                PriceAndAddToCartSection(onAddToCart: _addToCart),
               ],
             );
           },

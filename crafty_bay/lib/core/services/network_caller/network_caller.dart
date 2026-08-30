@@ -91,6 +91,7 @@ class NetworkCaller {
 
   void _logRequest(String url, {Map<String, dynamic>? body}) {
     _logger.i('''Request URL: $url
+    Headers: ${headers()}
     Body: $body
     ''');
   }
