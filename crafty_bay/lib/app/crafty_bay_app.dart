@@ -13,6 +13,8 @@ import 'routes.dart';
 class CraftyBayApp extends StatefulWidget {
   const CraftyBayApp({super.key});
 
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   State<CraftyBayApp> createState() => _CraftyBayAppState();
 }
@@ -41,6 +43,7 @@ class _CraftyBayAppState extends State<CraftyBayApp> {
           return Consumer<LocaleProvider>(
             builder: (context, _, _) {
               return MaterialApp(
+                navigatorKey: CraftyBayApp.navigatorKey,
                 title: 'Crafty Bay',
                 initialRoute: SplashScreen.name,
                 localizationsDelegates: [
@@ -56,9 +59,9 @@ class _CraftyBayAppState extends State<CraftyBayApp> {
                 supportedLocales: _localeProvider.supportedLocales,
                 locale: _localeProvider.currentLocale,
               );
-            }
+            },
           );
-        }
+        },
       ),
     );
   }

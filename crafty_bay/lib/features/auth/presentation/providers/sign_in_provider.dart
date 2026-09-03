@@ -23,6 +23,7 @@ class SignInProvider extends ChangeNotifier {
     final response = await getNetworkCaller().postRequest(
       Urls.signInUrl,
       body: params.toJson(),
+      fromLogin: true,
     );
     if (response.isSuccess) {
       String token = response.body['data']['token'];
