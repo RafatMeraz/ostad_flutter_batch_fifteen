@@ -22,4 +22,7 @@ class Urls {
   static const String addToCartUrl = '$_baseUrl/cart';
 
   static const String cartListUrl = '$_baseUrl/cart';
+
+  static String wishlistUrl(int pageNo, int pageSize) =>
+      '$_baseUrl/wishlist?page=$pageNo&count=$pageSize';
 }
