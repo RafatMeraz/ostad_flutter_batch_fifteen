@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ostad_flutter_batch_fifteen/face_detection_screen.dart';
 import 'package:ostad_flutter_batch_fifteen/map_screen.dart';
 import 'package:ostad_flutter_batch_fifteen/my_location_screen.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: MyLocationScreen(),
+      home: FaceDetectionScreen(),
     );
   }
 }
